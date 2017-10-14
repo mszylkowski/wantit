@@ -9,6 +9,8 @@ import {
   View
 } from 'react-native';
 
+import RNFetchBlob from 'react-native-fetch-blob';
+
 export default class CameraHome extends Component {
   static navigationOptions = {
     title: 'WantIt'
@@ -16,15 +18,10 @@ export default class CameraHome extends Component {
 
   constructor(props) {
     super(props);
-    this.scanned = true;
-  }
-
-  componentDidMount() {
-    this.scanned = false;
-  }
-
-  componentWillUnmount() {
-    this.scanned = false;
+    this.scanned = "";
+    this.id = 16;
+    this.label = "C";
+    this.readings = [];
   }
 
   render() {
@@ -36,17 +33,17 @@ export default class CameraHome extends Component {
           }}
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
-          captureQuality={Camera.constants.CaptureQuality["720p"]}
-          onBarCodeRead={this.readCode.bind(this)}>
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
+          captureQuality={Camera.constants.CaptureQuality["480p"]}
+          onBarCodeRead={(e) => {this.readCode(e)}}>
+          <Text style={styles.capture} onPress={(e) => {this.takePicture(e)}}>[CAPTURE]</Text>
         </Camera>
       </View>
     );
   }
 
   readCode(code) {
-    if (this.scanned) return;
-    this.scanned = true;
+    if (this.scanned == code) return;
+    this.scanned = code;
     this.props.navigation.navigate('Order', {url: code.text});
   }
 
@@ -58,8 +55,19 @@ export default class CameraHome extends Component {
       .catch(err => console.error(err));
   }
   goToOrder(path) {
-    if (this.scanned) return;
-    this.scanned = true;
+    console.log("Pressed button");
+    var start = new Date().getTime();
+    RNFetchBlob.fs.readFile(path, 'ascii')
+    .then((data) => {
+      //console.log(data.length + " Bytes");
+      start = new Date().getTime() - start;
+      console.log("It took " + start + " milliseconds");
+      alert("Done! Read " + this.id + " items for " + this.label + " in " + start + " milliseconds");
+    })
+
+    return;
+    if (this.scanned == path) return;
+    this.scanned = path;
     this.props.navigation.navigate('Order', {url: path});
   }
 }

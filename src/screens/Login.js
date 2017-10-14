@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  ActivityIndicator,
   Dimensions,
   StyleSheet,
   Text,
@@ -20,6 +21,18 @@ export default class Login extends Component {
     this.state = {email: '', password: ''};
   }
   render() {
+  if (this.state.loading) {
+      return (
+        <View style={{backgroundColor:'#3498DB', height:'100%', display:'flex', justifyContent:'center', padding:50}}>
+          <ActivityIndicator
+        animating={this.state.animating}
+        style={{height: 80}}
+        size="large"
+        color="white"
+      />
+        </View>
+        );
+    }
     return (
     	<View style={{backgroundColor:'#3498DB', height:'100%', display:'flex', justifyContent:'center', padding:50}}>
         <View style={{padding: 20, borderRadius:5, backgroundColor: '#ffffff', boxShadow:'0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'}}>
@@ -59,10 +72,16 @@ export default class Login extends Component {
   }
 
   login() {
+  this.setState({
+      loading: true,
+    });
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       alert(errorMessage);
     });
+    this.setState({
+      loading: false,
+      });
   }
 }

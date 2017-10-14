@@ -62,7 +62,7 @@ export default class Register extends Component {
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
-      ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
+      alert(errorMessage, ToastAndroid.SHORT);
     }).then((e) => {
       this.sendEmailVerification();
     });

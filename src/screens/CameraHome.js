@@ -55,14 +55,9 @@ export default class CameraHome extends Component {
       .catch(err => console.error(err));
   }
   goToOrder(path) {
-    console.log("Pressed button");
-    var start = new Date().getTime();
-    RNFetchBlob.fs.readFile(path, 'ascii')
+    RNFetchBlob.fs.readFile(path, 'base64')
     .then((data) => {
-      //console.log(data.length + " Bytes");
-      start = new Date().getTime() - start;
-      console.log("It took " + start + " milliseconds");
-      alert("Done! Read " + this.id + " items for " + this.label + " in " + start + " milliseconds");
+      console.log(data.length + " Bytes");
     })
 
     return;

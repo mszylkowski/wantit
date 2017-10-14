@@ -55,10 +55,15 @@ export default class Main extends Component {
   					title="Check verification"
   					onPress={() => {
   						firebase.auth().currentUser.reload().then((e) => {
-  							alert(firebase.auth().currentUser.emailVerified);
-  							console.log(e);
-  							console.log(firebase.auth().currentUser);
-  						})
+  							this.setState({user:firebase.auth().currentUser.emailVerified});
+  						});
+  					}}
+  				/>
+  				<Button
+  					color="grey"
+  					title="Resend email"
+  					onPress={() => {
+  						this.sendEmailVerification();
   					}}
   				/>
   			</View>
@@ -68,6 +73,12 @@ export default class Main extends Component {
     		<LoginStack/>
    		);
   	}
+  }
+
+  sendEmailVerification() {
+    firebase.auth().currentUser.sendEmailVerification().then(function() {
+      alert('Email Verification Sent!');
+    });
   }
 }
 
